@@ -13,7 +13,7 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/login', { email, password });
+      const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/login`, { email, password });
       login(res.data.token);
       navigate('/admin'); // or /dashboard based on role, we’ll handle it later
     } catch (err) {
