@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
-import { Container, Typography, Button, Box } from '@mui/material';
-import { getUsers } from '../api/userApi';
-import UserTable from '../components/UserTable';
-import AddUserDialog from '../components/AddUserDialog';
+import { useEffect, useState } from "react";
+import { Container, Typography, Button, Box } from "@mui/material";
+import { getUsers } from "../api/userApi";
+import UserTable from "../components/UserTable";
+import AddUserDialog from "../components/AddUserDialog";
 
 const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
@@ -13,7 +13,7 @@ const AdminDashboard = () => {
       const res = await getUsers();
       setUsers(res.data);
     } catch (err) {
-      alert('Failed to fetch users');
+      alert("Failed to fetch users");
     }
   };
 
@@ -23,12 +23,18 @@ const AdminDashboard = () => {
 
   return (
     <Container>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 3 }}>
+      <Box sx={{ display: "flex", justifyContent: "space-between", my: 3 }}>
         <Typography variant="h4">Admin Dashboard</Typography>
-        <Button variant="contained" onClick={() => setOpenAdd(true)}>Add User</Button>
+        <Button variant="contained" onClick={() => setOpenAdd(true)}>
+          Add User
+        </Button>
       </Box>
       <UserTable users={users} onRefresh={fetchUsers} />
-      <AddUserDialog open={openAdd} onClose={() => setOpenAdd(false)} onSuccess={fetchUsers} />
+      <AddUserDialog
+        open={openAdd}
+        onClose={() => setOpenAdd(false)}
+        onSuccess={fetchUsers}
+      />
     </Container>
   );
 };
