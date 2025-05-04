@@ -3,10 +3,12 @@ import { Container, Typography, Button, Box } from "@mui/material";
 import { getUsers } from "../api/userApi";
 import UserTable from "../components/UserTable";
 import AddUserDialog from "../components/AddUserDialog";
+import { useAuth } from "../context/AuthContext";
 
 const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
   const [openAdd, setOpenAdd] = useState(false);
+  const { logout } = useAuth();
 
   const fetchUsers = async () => {
     try {
@@ -25,9 +27,19 @@ const AdminDashboard = () => {
     <Container>
       <Box sx={{ display: "flex", justifyContent: "space-between", my: 3 }}>
         <Typography variant="h4">Admin Dashboard</Typography>
-        <Button variant="contained" onClick={() => setOpenAdd(true)}>
-          Add User
-        </Button>
+        <Box
+          sx={{
+            display: "flex",
+            gap: 2,
+          }}
+        >
+          <Button variant="contained" onClick={() => setOpenAdd(true)}>
+            Add User
+          </Button>
+          <Button variant="outlined" onClick={logout} color="error">
+            Log out
+          </Button>
+        </Box>
       </Box>
       <UserTable users={users} onRefresh={fetchUsers} />
       <AddUserDialog

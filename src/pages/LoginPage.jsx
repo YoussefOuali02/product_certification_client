@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { TextField, Button, Container, Typography, Box } from "@mui/material";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { login } = useAuth();
+  const { login, user } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -17,12 +17,23 @@ const LoginPage = () => {
         `${import.meta.env.VITE_API_BASE_URL}/auth/login`,
         { email, password },
       );
-      login(res.data.token);
-      navigate("/admin"); // or /dashboard based on role, we’ll handle it later
+      login(res.data.token); // user will be set in context here
     } catch (err) {
       alert(err.response?.data?.error || "Login failed");
     }
   };
+
+  useEffect(() => {
+    if (user) {
+      if (user.mustChangePassword) {
+        navigate("/change-password");
+      } else if (user.role === "Admin") {
+        navigate("/admin");
+      } else {
+        navigate("/dashboard");
+      }
+    }
+  }, [user, navigate]);
 
   return (
     <Container maxWidth="xs">
