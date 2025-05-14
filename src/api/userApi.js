@@ -15,3 +15,12 @@ export const getUsers = () => API.get("/users");
 export const createUser = (userData) => API.post("/users", userData);
 export const updateUser = (id, data) => API.put(`/users/${id}`, data);
 export const deleteUser = (id) => API.delete(`/users/${id}`);
+
+
+
+
+export const getDashboardURL = async () => {
+  const response = await API.get('/dashboard-url/dashboard'); 
+  return response.data.url;
+};
+
