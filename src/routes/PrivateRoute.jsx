@@ -1,15 +1,15 @@
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate } from "react-router-dom";
+import MainLayout from "../components/layout/MainLayout";
 import { useAuth } from "../context/AuthContext";
 
-const PrivateRoute = ({ children }) => {
+
+const PrivateRoute = ({ children, roles }) => {
   const { user } = useAuth();
-  const location = useLocation();
 
-  if (!user) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
-  }
+  if (!user) return <Navigate to="/login" />;
+  if (roles && !roles.includes(user.role)) return <Navigate to="/dashboard" />;
 
-  return children;
+  return <MainLayout>{children}</MainLayout>;
 };
 
 export default PrivateRoute;

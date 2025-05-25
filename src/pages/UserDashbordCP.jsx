@@ -3,15 +3,16 @@ import { useAuth } from "../context/AuthContext";
 import { useEffect, useState } from "react";
 import { getDashboardURL } from "../api/userApi";
 
-const UserDashboard = () => {
+const UserDashboardCP = () => {
   const { user, logout } = useAuth();
   const [dashboardURL, setDashboardURL] = useState("");
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+   useEffect(() => {
     const fetchDashboardURL = async () => {
       try {
-        const url = await getDashboardURL();
+        const isAdmin = user?.role === "Admin";
+        const url = await getDashboardURL(isAdmin ? "CertificationProcess" : undefined);
         setDashboardURL(url || "");
       } catch (error) {
         console.error("Failed to fetch dashboard URL:", error);
@@ -21,7 +22,7 @@ const UserDashboard = () => {
     };
 
     fetchDashboardURL();
-  }, []);
+  }, [user?.role]);
 
   return (
     <Box sx={{ minHeight: "100vh", backgroundColor: "#f4f6f8", py: 6 }}>
@@ -40,9 +41,6 @@ const UserDashboard = () => {
           <Typography variant="h4" sx={{ fontWeight: "bold", color: "#333" }}>
             {user?.role} Dashboard
           </Typography>
-          <Button variant="outlined" onClick={logout} color="error">
-            Log Out
-          </Button>
         </Box>
 
         {/* Dashboard Content */}
@@ -83,4 +81,4 @@ const UserDashboard = () => {
   );
 };
 
-export default UserDashboard;
+export default UserDashboardCP;

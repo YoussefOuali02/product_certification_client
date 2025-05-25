@@ -1,33 +1,39 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import LoginPage from "./pages/LoginPage";
-import AdminDashboard from "./pages/AdminDashboard";
-import UserDashboard from "./pages/UserDashboard";
-import ChangePassword from "./pages/ChangePassword";
 import { useAuth } from "./context/AuthContext";
+import LoginPage from "./components/auth/LoginPage";
+import ChangePassword from "./components/auth/ChangePassword";
 import PrivateRoute from "./routes/PrivateRoute";
+import AdminDashboard from "./pages/AdminDashboard";
+import LoginRedirector from "./components/auth/LoginRedirector";
+import UserDashboardTC from "./pages/UserDashboardTC";
+import UserDashboardCP from "./pages/UserDashbordCP";
 
 const App = () => {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
 
   const isAuthenticated = !!user;
-  const isAdmin = user?.role === "Admin";
   const mustChangePassword = user?.mustChangePassword;
 
+  if (loading) {
+    // Add a loading state to prevent early rendering
+    return <div>Loading...</div>;
+  }
+
   return (
-    <Routes>
+     <Routes>
       <Route
         path="/login"
         element={
-          isAuthenticated ? (
-            mustChangePassword ? (
-              <Navigate to="/change-password" replace />
-            ) : isAdmin ? (
-              <Navigate to="/admin" replace />
-            ) : (
-              <Navigate to="/dashboard" replace />
-            )
+          isAuthenticated ? <LoginRedirector /> : <LoginPage />
+        }
+      />
+      <Route
+        path="/change-password"
+        element={
+          isAuthenticated && mustChangePassword ? (
+            <ChangePassword />
           ) : (
-            <LoginPage />
+            <Navigate to="/" replace />
           )
         }
       />
@@ -35,34 +41,24 @@ const App = () => {
       <Route
         path="/admin"
         element={
-          <PrivateRoute>
-            {isAdmin ? (
-              <AdminDashboard />
-            ) : (
-              <Navigate to="/dashboard" replace />
-            )}
+          <PrivateRoute roles={["Admin"]}>
+            <AdminDashboard />
           </PrivateRoute>
         }
       />
-
       <Route
-        path="/change-password"
+        path="/tc-dashboard"
         element={
-          <PrivateRoute>
-            {mustChangePassword ? (
-              <ChangePassword />
-            ) : (
-              <Navigate to="/dashboard" replace />
-            )}
+          <PrivateRoute roles={["TC", "Admin"]}>
+            <UserDashboardTC />
           </PrivateRoute>
         }
       />
-
       <Route
-        path="/dashboard"
+        path="/certification-dashboard"
         element={
-          <PrivateRoute>
-            <UserDashboard />
+          <PrivateRoute roles={["CertificationProcess", "Admin"]}>
+            <UserDashboardCP />
           </PrivateRoute>
         }
       />

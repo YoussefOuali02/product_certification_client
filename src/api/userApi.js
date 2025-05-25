@@ -19,8 +19,10 @@ export const deleteUser = (id) => API.delete(`/users/${id}`);
 
 
 
-export const getDashboardURL = async () => {
-  const response = await API.get('/dashboard-url/dashboard'); 
+export const getDashboardURL = async (target) => {
+  const response = await API.get('/dashboard-url/dashboard', {
+    params: target ? { target } : {},
+  });
   return response.data.url;
 };
 

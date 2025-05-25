@@ -10,12 +10,10 @@ import {
 import { getUsers } from "../api/userApi";
 import UserTable from "../components/UserTable";
 import AddUserDialog from "../components/AddUserDialog";
-import { useAuth } from "../context/AuthContext";
 
 const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
   const [openAdd, setOpenAdd] = useState(false);
-  const { logout } = useAuth();
 
   const fetchUsers = async () => {
     try {
@@ -71,13 +69,6 @@ const AdminDashboard = () => {
                 onClick={() => setOpenAdd(true)}
               >
                 Add User
-              </Button>
-              <Button
-                variant="outlined"
-                color="error"
-                onClick={logout}
-              >
-                Log Out
               </Button>
             </Box>
           </Box>
