@@ -14,7 +14,15 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 
 const drawerWidth = 250;
+// Add this item once for reuse
+const predictionsItem = {
+  label: "Predictions",
+  path: "http://localhost:8501/",
+  icon: <DashboardIcon />,
+  external: true,
+};
 
+// Append the predictions item to each role
 const roleItems = {
   Admin: [
     {
@@ -32,6 +40,7 @@ const roleItems = {
       path: "/certification-dashboard",
       icon: <DashboardIcon />,
     },
+    predictionsItem,
   ],
   TC: [
     {
@@ -39,6 +48,7 @@ const roleItems = {
       path: "/tc-dashboard",
       icon: <DashboardIcon />,
     },
+    predictionsItem,
   ],
   CertificationProcess: [
     {
@@ -46,9 +56,9 @@ const roleItems = {
       path: "/certification-dashboard",
       icon: <DashboardIcon />,
     },
+    predictionsItem,
   ],
 };
-
 const Sidebar = () => {
   const { user } = useAuth();
   const theme = useTheme();
@@ -72,14 +82,25 @@ const Sidebar = () => {
     >
       <Toolbar />
       <List sx={{ paddingTop: 2 }}>
-        {items.map(({ label, path, icon }) => {
+        {items.map(({ label, path, icon, external }) => {
           const isActive = location.pathname === path;
+          const listItemProps = external
+            ? {
+                component: "a",
+                href: path,
+                target: "_blank",
+                rel: "noopener noreferrer",
+              }
+            : {
+                component: Link,
+                to: path,
+              };
+
           return (
             <ListItemButton
               key={label}
-              component={Link}
-              to={path}
-              selected={isActive}
+              {...listItemProps}
+              selected={!external && isActive}
               sx={{
                 mb: 1,
                 borderRadius: 1,
