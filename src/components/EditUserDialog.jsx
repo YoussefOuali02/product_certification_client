@@ -9,8 +9,10 @@ import {
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import { updateUser } from "../api/userApi";
+import { useSnackbar } from "../context/SnackbarContext";
 
 const EditUserDialog = ({ user, onClose, onSuccess }) => {
+  const { showMessage } = useSnackbar();
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -32,15 +34,16 @@ const EditUserDialog = ({ user, onClose, onSuccess }) => {
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
-  const handleSubmit = async () => {
-    try {
-      await updateUser(user._id, form);
-      onSuccess();
-      onClose();
-    } catch (err) {
-      alert("Failed to update user");
-    }
-  };
+const handleSubmit = async () => {
+  try {
+    await updateUser(user._id, form);
+    showMessage("User updated successfully!", "success");
+    onSuccess();
+    onClose();
+  } catch (err) {
+    showMessage("Failed to update user", "error");
+  }
+};
 
   if (!user) return null;
 

@@ -9,8 +9,10 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { createUser } from "../api/userApi";
+import { useSnackbar } from "../context/SnackbarContext";
 
 const AddUserDialog = ({ open, onClose, onSuccess }) => {
+  const { showMessage } = useSnackbar();
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -21,12 +23,17 @@ const AddUserDialog = ({ open, onClose, onSuccess }) => {
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
-  const handleSubmit = async () => {
+const handleSubmit = async () => {
+  try {
     await createUser(form);
+    showMessage("User created successfully!", "success");
     onSuccess();
     onClose();
     setForm({ firstName: "", lastName: "", email: "", role: "TC" });
-  };
+  } catch (error) {
+    showMessage("Failed to create user", "error");
+  }
+};
 
   return (
     <Dialog open={open} onClose={onClose}>

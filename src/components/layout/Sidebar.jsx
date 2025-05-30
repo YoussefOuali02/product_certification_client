@@ -14,7 +14,7 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 
 const drawerWidth = 250;
-// Add this item once for reuse
+
 const predictionsItem = {
   label: "Predictions",
   path: "http://localhost:8501/",
@@ -22,7 +22,6 @@ const predictionsItem = {
   external: true,
 };
 
-// Append the predictions item to each role
 const roleItems = {
   Admin: [
     {
@@ -30,17 +29,6 @@ const roleItems = {
       path: "/admin",
       icon: <AdminPanelSettingsIcon />,
     },
-    {
-      label: "TC Dashboard",
-      path: "/tc-dashboard",
-      icon: <DashboardIcon />,
-    },
-    {
-      label: "Certification Dashboard",
-      path: "/certification-dashboard",
-      icon: <DashboardIcon />,
-    },
-    predictionsItem,
   ],
   TC: [
     {
@@ -59,6 +47,7 @@ const roleItems = {
     predictionsItem,
   ],
 };
+
 const Sidebar = () => {
   const { user } = useAuth();
   const theme = useTheme();
@@ -75,8 +64,9 @@ const Sidebar = () => {
         "& .MuiDrawer-paper": {
           width: drawerWidth,
           boxSizing: "border-box",
-          backgroundColor: theme.palette.background.default,
+          backgroundColor: "#191970", // Midnight Blue
           borderRight: `1px solid ${theme.palette.divider}`,
+          color: "#fff",
         },
       }}
     >
@@ -105,16 +95,15 @@ const Sidebar = () => {
                 mb: 1,
                 borderRadius: 1,
                 mx: 1,
-                color: isActive
-                  ? theme.palette.primary.main
-                  : theme.palette.text.primary,
+                color: "#fff",
+                backgroundColor: isActive ? "rgba(255,255,255,0.2)" : "inherit",
                 "&:hover": {
-                  backgroundColor: theme.palette.action.hover,
+                  backgroundColor: "rgba(255,255,255,0.1)",
                 },
               }}
             >
               {icon && (
-                <ListItemIcon sx={{ color: "inherit" }}>{icon}</ListItemIcon>
+                <ListItemIcon sx={{ color: "#fff" }}>{icon}</ListItemIcon>
               )}
               <ListItemText primary={label} />
             </ListItemButton>
