@@ -50,15 +50,7 @@ const App = () => {
       <Route
         path="/user-dashboard"
         element={
-          <PrivateRoute roles={["TC", "Admin"]}>
-            <UserDashboard />
-          </PrivateRoute>
-        }
-      />
-      <Route
-        path="/user-dashboard"
-        element={
-          <PrivateRoute roles={["CertificationProcess", "Admin"]}>
+          <PrivateRoute roles={["CertificationProcess", "Admin", "TC"]}>
             <UserDashboard />
           </PrivateRoute>
         }
