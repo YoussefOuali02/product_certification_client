@@ -7,6 +7,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import LoginRedirector from "./components/auth/LoginRedirector";
 import UserDashboardTC from "./pages/UserDashboardTC";
 import UserDashboardCP from "./pages/UserDashbordCP";
+import UserDashboard from "./pages/UserDashboard";
 
 const App = () => {
   const { user, loading } = useAuth();
@@ -47,18 +48,18 @@ const App = () => {
         }
       />
       <Route
-        path="/tc-dashboard"
+        path="/user-dashboard"
         element={
           <PrivateRoute roles={["TC", "Admin"]}>
-            <UserDashboardTC />
+            <UserDashboard />
           </PrivateRoute>
         }
       />
       <Route
-        path="/certification-dashboard"
+        path="/user-dashboard"
         element={
           <PrivateRoute roles={["CertificationProcess", "Admin"]}>
-            <UserDashboardCP />
+            <UserDashboard />
           </PrivateRoute>
         }
       />

@@ -21,7 +21,6 @@ const predictionsItem = {
   icon: <DashboardIcon />,
   external: true,
 };
-
 const roleItems = {
   Admin: [
     {
@@ -33,7 +32,7 @@ const roleItems = {
   TC: [
     {
       label: "TC Dashboard",
-      path: "/tc-dashboard",
+      path: "/user-dashboard",
       icon: <DashboardIcon />,
     },
     predictionsItem,
@@ -41,7 +40,7 @@ const roleItems = {
   CertificationProcess: [
     {
       label: "Certification Dashboard",
-      path: "/certification-dashboard",
+      path: "/user-dashboard",
       icon: <DashboardIcon />,
     },
     predictionsItem,
