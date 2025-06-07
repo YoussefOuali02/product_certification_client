@@ -6,10 +6,15 @@ const LoginRedirector = () => {
 
   if (!user) return <Navigate to="/login" replace />;
 
+  // ✅ Redirect to change-password first if needed
+  if (user.mustChangePassword) {
+    return <Navigate to="/change-password" replace />;
+  }
+
   if (user.role === "Admin") return <Navigate to="/admin" replace />;
-  if (user.role === "TC") return <Navigate to="/user-dashboard" replace />;
-  if (user.role === "CertificationProcess")
+  if (["TC", "CertificationProcess"].includes(user.role)) {
     return <Navigate to="/user-dashboard" replace />;
+  }
 
   return <Navigate to="/login" replace />;
 };

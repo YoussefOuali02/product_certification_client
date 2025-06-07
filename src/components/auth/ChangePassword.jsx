@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { API } from "../../api/userApi";
 import { useAuth } from "../../context/AuthContext";
 import AuthPageWrapper from "./AuthPageWrapper";
+import logo from "../../assets/logo.jpg"; // import logo like in LoginPage
 
 const ChangePassword = () => {
   const [newPassword, setNewPassword] = useState("");
@@ -30,6 +31,15 @@ const ChangePassword = () => {
   return (
     <AuthPageWrapper>
       <Box display="flex" flexDirection="column" alignItems="center">
+        {/* Logo */}
+        <Box
+          component="img"
+          src={logo}
+          alt="Company Logo"
+          sx={{ width: 200, mb: 2 }}
+        />
+
+        {/* Title */}
         <Typography variant="h5" fontWeight="bold" gutterBottom>
           Change Your Password
         </Typography>
@@ -37,6 +47,7 @@ const ChangePassword = () => {
           For security, please set a new password
         </Typography>
 
+        {/* Form */}
         <Box
           component="form"
           onSubmit={handleSubmit}

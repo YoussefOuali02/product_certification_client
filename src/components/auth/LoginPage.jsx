@@ -30,17 +30,7 @@ const LoginPage = () => {
     }
   };
 
-  useEffect(() => {
-    if (user) {
-      if (user.mustChangePassword) {
-        navigate("/change-password");
-      } else if (user.role === "Admin") {
-        navigate("/admin");
-      } else {
-        navigate("/user-dashboard");
-      }
-    }
-  }, [user, navigate]);
+ 
 
   return (
     <AuthPageWrapper>
