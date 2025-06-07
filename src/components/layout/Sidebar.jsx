@@ -17,14 +17,15 @@ const drawerWidth = 250;
 
 const predictionsItem = {
   label: "Predictions",
-  path: "http://localhost:8501/",
+  path: "/predictions",
   icon: <DashboardIcon />,
-  external: true,
+  external: false,
 };
+
 const roleItems = {
   Admin: [
     {
-      label: "Admin Dashboard",
+      label: "Home",
       path: "/admin",
       icon: <AdminPanelSettingsIcon />,
     },
@@ -88,7 +89,8 @@ const Sidebar = () => {
           return (
             <ListItemButton
               key={label}
-              {...listItemProps}
+              component={Link}
+              to={path} // This is now an internal link to /predictions
               selected={!external && isActive}
               sx={{
                 mb: 1,

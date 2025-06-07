@@ -1,6 +1,12 @@
-import { Box, Button, Container, Typography, Paper, CircularProgress, ToggleButtonGroup, ToggleButton } from "@mui/material";
+import {
+  Box,
+  Container,
+  Typography,
+  ToggleButtonGroup,
+  ToggleButton,
+} from "@mui/material";
 import { useAuth } from "../context/AuthContext";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const CP_DASHBOARDS = [
   {
@@ -20,44 +26,21 @@ const CP_DASHBOARDS = [
   },
 ];
 
-const TC_DASHBOARD = CP_DASHBOARDS[2]; // Only the shared dashboard
+const TC_DASHBOARD = CP_DASHBOARDS[2]; // Shared dashboard
 
 const UserDashboard = () => {
   const { user } = useAuth();
   const [selectedDashboard, setSelectedDashboard] = useState(CP_DASHBOARDS[0].id);
-  const [loading, setLoading] = useState(true);
 
   const isCP = user?.role === "CertificationProcess";
   const isTC = user?.role === "TC";
 
-  useEffect(() => {
-    setLoading(true);
-    const timeout = setTimeout(() => setLoading(false), 500); // Simulate load
-    return () => clearTimeout(timeout);
-  }, [selectedDashboard]);
-
-  const getDashboardURL = () => {
-    if (isTC) return TC_DASHBOARD.url;
-    const dashboard = CP_DASHBOARDS.find(d => d.id === selectedDashboard);
-    return dashboard?.url || "";
-  };
-
-  const renderToggleButtons = () => {
-    if (!isCP) return null;
-    return (
-      <ToggleButtonGroup
-        value={selectedDashboard}
-        exclusive
-        onChange={(_, newVal) => newVal && setSelectedDashboard(newVal)}
-        sx={{ mb: 4 }}
-      >
-        {CP_DASHBOARDS.map(d => (
-          <ToggleButton key={d.id} value={d.id}>
-            {d.label}
-          </ToggleButton>
-        ))}
-      </ToggleButtonGroup>
-    );
+  const handleDashboardClick = (id) => {
+    const dashboard = CP_DASHBOARDS.find((d) => d.id === id);
+    if (dashboard) {
+      setSelectedDashboard(id);
+      window.open(dashboard.url, "_blank", "noopener,noreferrer");
+    }
   };
 
   return (
@@ -67,40 +50,38 @@ const UserDashboard = () => {
           {user?.role} Dashboard
         </Typography>
 
-        {renderToggleButtons()}
+        {isCP && (
+          <ToggleButtonGroup
+            value={selectedDashboard}
+            exclusive
+            onChange={(_, newVal) => {
+              if (newVal) handleDashboardClick(newVal);
+            }}
+            sx={{ mb: 4 }}
+          >
+            {CP_DASHBOARDS.map((d) => (
+              <ToggleButton key={d.id} value={d.id}>
+                {d.label}
+              </ToggleButton>
+            ))}
+          </ToggleButtonGroup>
+        )}
 
-        <Paper
-          elevation={3}
-          sx={{
-            height: "80vh",
-            p: 2,
-            borderRadius: 3,
-            backgroundColor: "#fff",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          {loading ? (
-            <CircularProgress />
-          ) : (
-            <iframe
-              title="QlikSense Dashboard"
-              src={getDashboardURL()}
-              width="100%"
-              height="100%"
-              style={{
-                border: "none",
-                borderRadius: "12px",
-              }}
-              allowFullScreen
-            />
-          )}
-        </Paper>
+        {isTC && (
+          <ToggleButtonGroup
+            value="dashboard3"
+            exclusive
+            onChange={() => handleDashboardClick("dashboard3")}
+            sx={{ mb: 4 }}
+          >
+            <ToggleButton value="dashboard3">
+              {TC_DASHBOARD.label}
+            </ToggleButton>
+          </ToggleButtonGroup>
+        )}
       </Container>
     </Box>
   );
 };
 
 export default UserDashboard;
-

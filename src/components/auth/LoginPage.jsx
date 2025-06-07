@@ -1,9 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   TextField,
   Button,
   Typography,
   Box,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
@@ -14,8 +16,14 @@ import AuthPageWrapper from "./AuthPageWrapper";
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { login, user } = useAuth();
+  const { login } = useAuth();
   const navigate = useNavigate();
+
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "error",
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,24 +34,23 @@ const LoginPage = () => {
       );
       login(res.data.token);
     } catch (err) {
-      alert(err.response?.data?.error || "Login failed");
+      setSnackbar({
+        open: true,
+        message: err.response?.data?.error || "Login failed",
+        severity: "error",
+      });
     }
   };
 
- 
+  const handleCloseSnackbar = () => {
+    setSnackbar({ ...snackbar, open: false });
+  };
 
   return (
     <AuthPageWrapper>
       <Box display="flex" flexDirection="column" alignItems="center">
-        {/* Logo */}
-        <Box
-          component="img"
-          src={logo}
-          alt="Company Logo"
-          sx={{ width: 200, mb: 2 }}
-        />
+        <Box component="img" src={logo} alt="Company Logo" sx={{ width: 200, mb: 2 }} />
 
-        {/* Title */}
         <Typography variant="h5" fontWeight="bold" gutterBottom>
           Welcome Back
         </Typography>
@@ -51,7 +58,6 @@ const LoginPage = () => {
           Please login to continue
         </Typography>
 
-        {/* Login Form */}
         <Box
           component="form"
           onSubmit={handleSubmit}
@@ -94,6 +100,18 @@ const LoginPage = () => {
           </Button>
         </Box>
       </Box>
+
+      {/* Snackbar */}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={4000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} sx={{ width: "100%" }}>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </AuthPageWrapper>
   );
 };

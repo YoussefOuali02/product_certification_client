@@ -34,16 +34,31 @@ const EditUserDialog = ({ user, onClose, onSuccess }) => {
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
-const handleSubmit = async () => {
-  try {
-    await updateUser(user._id, form);
-    showMessage("User updated successfully!", "success");
-    onSuccess();
-    onClose();
-  } catch (err) {
-    showMessage("Failed to update user", "error");
-  }
-};
+  const isValid = () => {
+    const { firstName, lastName, email } = form;
+    const nameRegex = /^[a-zA-Z\s-]{2,50}$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return (
+      nameRegex.test(firstName) &&
+      nameRegex.test(lastName) &&
+      emailRegex.test(email)
+    );
+  };
+
+  const handleSubmit = async () => {
+    if (!isValid()) {
+      showMessage("Please fill all fields correctly", "error");
+      return;
+    }
+    try {
+      await updateUser(user._id, form);
+      showMessage("User updated successfully!", "success");
+      onSuccess();
+      onClose();
+    } catch (err) {
+      showMessage("Failed to update user", "error");
+    }
+  };
 
   if (!user) return null;
 
@@ -53,24 +68,38 @@ const handleSubmit = async () => {
       <DialogContent>
         <TextField
           fullWidth
+          required
           label="First Name"
           name="firstName"
           margin="dense"
+          inputProps={{
+            minLength: 2,
+            maxLength: 50,
+            pattern: "^[a-zA-Z\\s-]+$",
+          }}
           value={form.firstName}
           onChange={handleChange}
         />
         <TextField
           fullWidth
+          required
           label="Last Name"
           name="lastName"
           margin="dense"
+          inputProps={{
+            minLength: 2,
+            maxLength: 50,
+            pattern: "^[a-zA-Z\\s-]+$",
+          }}
           value={form.lastName}
           onChange={handleChange}
         />
         <TextField
           fullWidth
+          required
           label="Email"
           name="email"
+          type="email"
           margin="dense"
           value={form.email}
           onChange={handleChange}

@@ -5,6 +5,8 @@ import {
   Box,
   Paper,
   Divider,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import { getUsers } from "../api/userApi";
 import UserTable from "../components/UserTable";
@@ -15,12 +17,22 @@ const AdminDashboard = () => {
   const [openAdd, setOpenAdd] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "error",
+  });
+
   const fetchUsers = async () => {
     try {
       const res = await getUsers();
       setUsers(res.data);
     } catch (err) {
-      alert("Failed to fetch users");
+      setSnackbar({
+        open: true,
+        message: "Failed to fetch users",
+        severity: "error",
+      });
     }
   };
 
@@ -30,6 +42,10 @@ const AdminDashboard = () => {
 
   const handleSearch = (term) => {
     setSearchTerm(term);
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbar({ ...snackbar, open: false });
   };
 
   return (
@@ -80,7 +96,7 @@ const AdminDashboard = () => {
               variant="contained"
               color="primary"
               onClick={() => setOpenAdd(true)}
-              sx={{ marginLeft: "auto" }} // Align button to the right
+              sx={{ marginLeft: "auto" }}
             >
               Add User
             </Button>
@@ -107,6 +123,18 @@ const AdminDashboard = () => {
           onSuccess={fetchUsers}
         />
       </Container>
+
+      {/* Snackbar */}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={4000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} sx={{ width: "100%" }}>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

@@ -4,15 +4,23 @@ import {
   Button,
   Typography,
   Box,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { API } from "../../api/userApi";
 import { useAuth } from "../../context/AuthContext";
 import AuthPageWrapper from "./AuthPageWrapper";
-import logo from "../../assets/logo.jpg"; // import logo like in LoginPage
+import logo from "../../assets/logo.jpg";
 
 const ChangePassword = () => {
   const [newPassword, setNewPassword] = useState("");
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success", // or "error"
+  });
+
   const navigate = useNavigate();
   const { logout } = useAuth();
 
@@ -20,26 +28,35 @@ const ChangePassword = () => {
     e.preventDefault();
     try {
       await API.post("/auth/change-password", { newPassword });
-      alert("Password updated. Please log in again.");
-      logout();
-      navigate("/login");
+      setSnackbar({
+        open: true,
+        message: "Password updated. Please log in again.",
+        severity: "success",
+      });
+
+      // Delay logout & redirect to let user see the snackbar
+      setTimeout(() => {
+        logout();
+        navigate("/login");
+      }, 2000);
     } catch (err) {
-      alert(err.response?.data?.error || "Password update failed");
+      setSnackbar({
+        open: true,
+        message: err.response?.data?.error || "Password update failed",
+        severity: "error",
+      });
     }
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbar({ ...snackbar, open: false });
   };
 
   return (
     <AuthPageWrapper>
       <Box display="flex" flexDirection="column" alignItems="center">
-        {/* Logo */}
-        <Box
-          component="img"
-          src={logo}
-          alt="Company Logo"
-          sx={{ width: 200, mb: 2 }}
-        />
+        <Box component="img" src={logo} alt="Company Logo" sx={{ width: 200, mb: 2 }} />
 
-        {/* Title */}
         <Typography variant="h5" fontWeight="bold" gutterBottom>
           Change Your Password
         </Typography>
@@ -47,7 +64,6 @@ const ChangePassword = () => {
           For security, please set a new password
         </Typography>
 
-        {/* Form */}
         <Box
           component="form"
           onSubmit={handleSubmit}
@@ -81,6 +97,18 @@ const ChangePassword = () => {
           </Button>
         </Box>
       </Box>
+
+      {/* Snackbar */}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={4000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} sx={{ width: "100%" }}>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </AuthPageWrapper>
   );
 };

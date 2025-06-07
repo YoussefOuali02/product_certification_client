@@ -8,6 +8,7 @@ import LoginRedirector from "./components/auth/LoginRedirector";
 import UserDashboardTC from "./pages/UserDashboardTC";
 import UserDashboardCP from "./pages/UserDashbordCP";
 import UserDashboard from "./pages/UserDashboard";
+import PredictionsPage from "./pages/PredictionsPage";
 
 const App = () => {
   const { user, loading } = useAuth();
@@ -54,6 +55,14 @@ const App = () => {
             <UserDashboard />
           </PrivateRoute>
         }
+      />
+       <Route
+        path="/predictions"
+        element={
+        <PrivateRoute roles={["CertificationProcess", "TC"]}>
+        <PredictionsPage />
+        </PrivateRoute>
+        } 
       />
 
       <Route path="*" element={<Navigate to="/login" replace />} />
